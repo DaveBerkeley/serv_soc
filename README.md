@@ -32,9 +32,9 @@ You will need also need the synthesis and place-and-route tools, **yosys**, **ne
 
 For development I also use **verilator**, as a lint tool, **vvp** to run test scripts and **gtkwave** to view the resulting waveforms.
 
-You need to set the environment variableSER to point at your copy of the SERV git repository.
+You need to set the environment variable SERV to point at your copy of the SERV git repository.
 
-You will also need the **gcc** risc-v tool chain on yourPAT.
+You will also need the **gcc** risc-v tool chain on your PATH.
 
 eg:
 
