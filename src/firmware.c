@@ -75,7 +75,7 @@ int main(void)
 {
     *LEDS = 0;
 
-#if 0
+#if 1
     print(banner);
 
     print("RAM ");
@@ -88,6 +88,8 @@ int main(void)
     show_section("Stack   :", & _sstack, & _estack);
     print("\r\n");
 #endif
+
+    while (true) ;
 
     uint32_t v;
 

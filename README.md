@@ -2,6 +2,8 @@
 SERV SoC
 ========
 
+Please see my [blog page](https://www.rotwang.co.uk/projects/serv.html) for more information.
+
 SoC based on SERV, Olof Kindgren's bit-serial RISC-V processor. It provides Execute in Place (XiP) from Flash. This improves the usability of the CPU core, at the cost of added complexity and slower execution speed.
 
 Instead of fetching code from DP_RAM, the SoC has a SPI interface that reads the Flash chip. Instruction fetches from the processor are directed to the Flash.
