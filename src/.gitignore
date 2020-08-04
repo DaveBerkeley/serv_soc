@@ -6,3 +6,5 @@ serv.bin
 serv.json
 serv.log
 serv.rpt
+serv.vcd
+*_tb
