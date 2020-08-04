@@ -1,0 +1,9 @@
+`verilator_config
+lint_off -file "pll.v"
+lint_off -file "ice40up5k_spram.v"
+lint_off -file "/usr/share/yosys/ice40/cells_sim.v"
+lint_off -file "${SERV}/rtl/serv_top.v"
+lint_off -file "${SERV}/rtl/serv_mem_if.v"
+lint_off -file "${SERV}/rtl/serv_ctrl.v"
+lint_off -file "${SERV}/rtl/serv_alu.v"
+lint_off -rule DECLFILENAME
