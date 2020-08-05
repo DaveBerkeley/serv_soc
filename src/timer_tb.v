@@ -266,6 +266,37 @@ module top();
 
         @(posedge wb_clk);
         @(posedge wb_clk);
+
+        // Check for read/write interleaved
+        
+        wb_rst <= 1;
+        @(posedge wb_clk);
+        @(posedge wb_clk);
+        wb_rst <= 0;
+
+        @(posedge wb_clk);
+
+        read (32'hc0000000); // read mtime lo
+        wait(!cyc);
+        @(posedge wb_clk);
+        @(posedge wb_clk);
+        tb_assert(rd_rdt == 32'hfffffff1);
+        
+        write(32'hc0000008, 32'hbbbbbbbb); // write cmp
+        wait(!cyc);
+        @(posedge wb_clk);
+        write(32'hc000000c, 32'haaaaaaaa); // write cmp
+        wait(!cyc);
+        @(posedge wb_clk);
+
+        read (32'hc0000004); // read mtime hi
+        wait(!cyc);
+        @(posedge wb_clk);
+        @(posedge wb_clk);
+        tb_assert(rd_rdt == 32'h12345678);
+
+        @(posedge wb_clk);
+        @(posedge wb_clk);
         $finish;         
     end
 

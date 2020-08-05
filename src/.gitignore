@@ -8,3 +8,4 @@ serv.log
 serv.rpt
 serv.vcd
 *_tb
+*.gtkw

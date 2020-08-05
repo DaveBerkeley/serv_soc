@@ -19,8 +19,9 @@ module timer
 
     reg [63:0] mtime;
     reg [63:0] mtimecmp;
-    // temp register needed to make read/writes atomic
-    reg [31:0] temp;
+    // temp registers needed to make 64-bit read/writes atomic
+    reg [31:0] temp_time;
+    reg [31:0] temp_cmp;
 
     initial begin
         irq = 0;
@@ -45,11 +46,11 @@ module timer
         if (cyc & wb_dbus_we) begin
             if (addr == 2) begin
                 // latch mtimecmp_lo
-                temp <= wb_dbus_dat;
+                temp_cmp <= wb_dbus_dat;
             end 
             if (addr == 3) begin
                 // mtimecmp_hi + latched lo word
-                mtimecmp[31:0]  <= temp;
+                mtimecmp[31:0]  <= temp_cmp;
                 mtimecmp[63:32] <= wb_dbus_dat;
             end
         end
@@ -57,7 +58,7 @@ module timer
         if (cyc & !wb_dbus_we) begin
             if (addr == 0) begin
                 // mtime_lo : latch the hi word
-                temp <= mtime[63:32];
+                temp_time <= mtime[63:32];
             end 
         end
 
@@ -68,7 +69,7 @@ module timer
         begin
             case (reg_addr)
                 0   :   read = mtime[31:0];
-                1   :   read = temp;
+                1   :   read = temp_time;
                 2   :   read = mtimecmp[31:0];
                 3   :   read = mtimecmp[63:32];
             endcase
