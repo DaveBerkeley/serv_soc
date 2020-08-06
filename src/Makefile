@@ -33,6 +33,7 @@ FILES += uart.v
 FILES += spi.v
 FILES += gpio.v
 FILES += chip_select.v
+FILES += ram_arb.v
 FILES += bus_arb.v
 FILES += timer.v
 FILES += irq.v
@@ -90,6 +91,6 @@ firmware.elf: firmware.c start.s soc.c Makefile icebreaker_sections.lds
 $(VCONFIG): config.vlt
 	envsubst < $^ > $@
 
-tb: serv_tb bus_arb_tb ibus_tb uart_tb reset_tb spi_tb timer_tb irq_tb
+tb: serv_tb bus_arb_tb ibus_tb uart_tb reset_tb spi_tb timer_tb irq_tb ram_arb_tb
 
 #	FIN

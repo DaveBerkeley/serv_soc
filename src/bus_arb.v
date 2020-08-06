@@ -23,51 +23,45 @@ module bus_arb(
     output wire busy
 );
 
-    reg dev_a = 0; // Device A granted control
-    reg dev_b = 0; // Device B granted control
-    reg pause = 0; // Pause after x_ack
-    wire cycle_busy;
+    /* verilator lint_off UNUSED */
+    wire x_we;
+    wire [3:0] x_sel;
+    wire [31:0] x_dat;
+    /* verilator lint_on UNUSED */
 
-    assign cycle_busy = dev_a | dev_b | pause;
-    assign busy = cycle_busy | a_cyc | b_cyc;
+    assign x_we = 0;
+    assign x_sel = 0;
+    assign x_dat = 0;
 
-    // Detect start of device request
-    wire a_start;
-    assign a_start = a_cyc & !cycle_busy;
-    wire b_start;
-    assign b_start = b_cyc & !(a_cyc | cycle_busy);
+    ram_arb #(.WIDTH(32))
+    arb
+    (
+        .wb_clk(wb_clk),
+        .a_cyc(a_cyc),
+        .a_adr(a_adr),
+        .a_ack(a_ack),
+        .a_rdt(a_rdt),
+        .b_cyc(b_cyc),
+        .b_adr(b_adr),
+        .b_ack(b_ack),
+        .b_rdt(b_rdt),
+        .x_cyc(x_cyc),
+        .x_adr(x_adr),
+        .x_ack(x_ack),
+        .x_rdt(x_rdt),
+        // signals not present in ROM
+        .a_we(1'b0),
+        .a_sel(4'b0),
+        .a_dat(32'b0),
+        .b_we(1'b0),
+        .b_sel(4'b0),
+        .b_dat(32'b0),
+        .x_we(x_we),
+        .x_sel(x_sel),
+        .x_dat(x_dat)
+    );
 
-    always @(posedge wb_clk) begin
-
-        if (x_ack) begin
-            // End of request, clear busy
-            dev_a <= 0;
-            dev_b <= 0;
-        end
-
-        pause <= x_ack;
-
-        if (a_start) begin
-            // Grant the bus to dev A
-            dev_a <= 1;
-        end
-
-        if (b_start) begin
-            // Grant the bus to dev A
-            dev_b <= 1;
-        end
-
-    end
-
-    // TODO : can this cause a glitch on the adr lines?
-    assign x_cyc = (dev_a & a_cyc) | (dev_b & b_cyc) | ((a_cyc | b_cyc) & !cycle_busy);
-    assign x_adr = ((a_start | dev_a) ? a_adr : 0) | ((b_start | dev_b) ? b_adr : 0);
-
-    assign a_ack = dev_a & x_ack;
-    assign b_ack = dev_b & x_ack;
-
-    assign a_rdt = dev_a ? x_rdt : 0;
-    assign b_rdt = dev_b ? x_rdt : 0;
+    assign busy = x_cyc;
 
 endmodule
 
