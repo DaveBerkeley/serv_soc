@@ -44,10 +44,11 @@ module ram_arb
     assign start = (a_cyc | b_cyc) & !busy;
 
     always @(posedge wb_clk) begin
-        if (a_cyc & !busy) begin
+
+        if (a_cyc & !(dev_a | dev_b)) begin
             dev_a <= 1;
         end
-        if (b_cyc & !(busy | a_cyc)) begin
+        if (b_cyc & (!dev_b) & !a_cyc) begin
             dev_b <= 1;
         end
 

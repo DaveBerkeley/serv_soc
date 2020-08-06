@@ -209,6 +209,8 @@ module tb ();
 
     endtask
 
+    integer addr = 0;
+
     initial begin
 
         @(posedge wb_clk);
@@ -470,6 +472,50 @@ module tb ();
         wait(!a_cyc);
         wait(!b_cyc);
         tb_assert(rd_a == 32'h12345678);
+        @(posedge wb_clk);
+        @(posedge wb_clk);
+
+        // Ensure that byte and word writes work correctly
+
+        // Test byte writes
+        addr = 32'h0000_0014;
+        write_a(addr, 32'hxxxxxxab, 4'b0001);
+        write_b(addr, 32'hxxxxcdxx, 4'b0010);
+        @(posedge wb_clk);
+        wait(!a_cyc);
+        @(posedge wb_clk);
+        read_a(addr);
+        @(posedge wb_clk);
+        wait(!b_cyc);
+        wait(!a_cyc);
+        @(posedge wb_clk);
+        tb_assert((rd_a & 32'h0000ffff) == 32'h0000cdab);
+        @(posedge wb_clk);
+
+        write_a(32'h0000_0014, 32'hxxfexxxx, 4'b0100);
+        write_b(32'h0000_0014, 32'hcaxxxxxx, 4'b1000);
+        @(posedge wb_clk);
+        wait(!a_cyc);
+        wait(!b_cyc);
+        read_a(32'h0000_0014);
+        @(posedge wb_clk);
+        wait(!a_cyc);
+        wait(!b_cyc);
+        tb_assert(rd_a == 32'hcafecdab);
+        @(posedge wb_clk);
+
+        // Test word writes
+        write_a(addr, 32'hxxxx1234, 4'b0011);
+        write_b(addr, 32'habcdxxxx, 4'b1100);
+        @(posedge wb_clk);
+        wait(!a_cyc);
+        @(posedge wb_clk);
+        read_a(addr);
+        @(posedge wb_clk);
+        wait(!b_cyc);
+        wait(!a_cyc);
+        @(posedge wb_clk);
+        tb_assert(32'habcd1234);
 
         $display("done");
     end
