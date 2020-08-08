@@ -4,8 +4,8 @@
 
 #include "soc.h"
 
-#define TIMER ((uint32_t*) 0xc0000000)
-#define uart  ((uint32_t*) 0x50000000)
+//#define TIMER ((uint32_t volatile *) 0xc0000000)
+#define uart  ((uint32_t volatile *) 0x50000000)
 
     /*
      *  _sbrk() is used by malloc() to alloc heap memory.
@@ -64,6 +64,15 @@ uint64_t timer_get_cmp()
     const uint32_t hi = TIMER[TIMER_MTIMECMP_HI];
 
     return lo + (((uint64_t) hi) << 32);
+}
+
+void timer_wait(uint64_t period)
+{
+    const uint64_t now = timer_get();
+    const uint64_t end = now + period;
+
+    while (timer_get() < end)
+        ;
 }
 
     /*

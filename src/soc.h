@@ -3,10 +3,10 @@
      *
      */
 
-#define LEDS  ((uint32_t*) 0x40000000)
-#define flash ((uint32_t*) 0x70000000)
-#define IRQ   ((uint32_t*) 0x80000000)
-#define TIMER ((uint32_t*) 0xc0000000)
+#define LEDS  ((uint32_t volatile*) 0x40000000)
+#define flash ((uint32_t volatile*) 0x70000000)
+#define IRQ   ((uint32_t volatile*) 0x80000000)
+#define TIMER ((uint32_t volatile*) 0xc0000000)
 
     /*
      *  IRQ Controller
@@ -93,6 +93,7 @@ inline void write_mcause(uint32_t value)
 void timer_set(uint64_t t);
 uint64_t timer_get();
 uint64_t timer_get_cmp();
+void timer_wait(uint64_t period);
 
     /*
      *

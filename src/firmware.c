@@ -7,8 +7,8 @@
 
 #include "soc.h"
 
-#define LEDS  ((uint32_t*) 0x40000000)
-#define flash ((uint32_t*) 0x70000000)
+#define LEDS  ((uint32_t volatile*) 0x40000000)
+#define flash ((uint32_t volatile*) 0x70000000)
 
 // Memory locations defined in the linker config.
 extern "C" uint32_t _stext, _etext, _sdata, _edata, _sheap, _eheap, _sstack, _estack, _ivector;
