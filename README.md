@@ -63,6 +63,16 @@ the linker script icebreaker_sections.lds is based on code in
 Claire Wolf's excellent
 [picosoc processor](https://github.com/cliffordwolf/picorv32/tree/master/picosoc).
 
+----
+
+TODO
+
+* use a higher clock speed to drive the Flash SPI interface. The chip can go up to 50MHz. This will improve the ibus fetch rate by up to 4 times.
+* use DSPI or QSPI to fetch data from the Flash. This could double or quadruple the ibus fetch speed.
+* Add DMA, to allow the host RAM space to be shared by other parts of the FPGA.
+
+----
+
 I'd like to thank Olof Kindgren and Claire Wolf for their amazing work.
 The availability of open source CPU cores open up a whole world of
 possibilities for anyone doing FPGA development. 
