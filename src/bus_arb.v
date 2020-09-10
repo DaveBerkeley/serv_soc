@@ -29,10 +29,6 @@ module bus_arb(
     wire [31:0] x_dat;
     /* verilator lint_on UNUSED */
 
-    assign x_we = 0;
-    assign x_sel = 0;
-    assign x_dat = 0;
-
     ram_arb #(.WIDTH(32))
     arb
     (
